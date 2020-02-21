@@ -33,7 +33,7 @@
                         <ImageView
                             android:layout_width="@dimen/_150sdp"
                             android:layout_height="@dimen/_150sdp"
-                            android:background="@color/blue_400"/>
+                            android:background="@drawable/rental"/>
                     </LinearLayout>
                 </RelativeLayout>
             </LinearLayout>

@@ -1,55 +1,63 @@
 package com.vrcorp.rentalinapp.layout;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.vrcorp.rentalinapp.MainActivity;
 import com.vrcorp.rentalinapp.R;
+import com.vrcorp.rentalinapp.adapter.MobilAdapter;
+import com.vrcorp.rentalinapp.model.ModelUtama;
+import com.vrcorp.rentalinapp.server.Url;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link MobilFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link MobilFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
 public class MobilFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
-
+    ProgressDialog pDialog;
+    private static final String TAG = MainActivity.class.getSimpleName();
+    SharedPreferences sharedpreferences;
+    int success;
+    String idmobil, kodeMobil, merekMobil, alamat, harga, string_id;
+    List<ModelUtama> dbList;
+    List<ModelUtama> modelList ;
+    private MobilAdapter adapter;
+    LinearLayout data, noData;
+    RecyclerView order_list;
+    View view;
     public MobilFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MobilFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static MobilFragment newInstance(String param1, String param2) {
         MobilFragment fragment = new MobilFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -58,54 +66,87 @@ public class MobilFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_mobil, container, false);
+        view = inflater.inflate(R.layout.fragment_mobil, container, false);
+        sharedpreferences = getActivity().getSharedPreferences("rentalinApp", Context.MODE_PRIVATE);
+        string_id = sharedpreferences.getString("id", null);
+        getMobil(string_id);
+        return view;
     }
+    private void getMobil(final String xid){
+        final String urll = Url.URL + "getmobil.php?id="+xid+"&&limit=0";
+        RequestQueue requestQueue= Volley.newRequestQueue(getContext());
+        modelList= new ArrayList<ModelUtama>();
+        pDialog = new ProgressDialog(getActivity());
+        pDialog.setCancelable(false);
+        pDialog.setMessage("Memuat data ....");
+        pDialog.show();
+        Log.wtf("URL Called", urll + "");
+        StringRequest stringRequest=new StringRequest(Request.Method.GET,
+                urll, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+                    JSONObject jsonObject=new JSONObject(response);
+                    JSONArray jArray = jsonObject.getJSONArray("content");
+                    if(jArray.length()>0){
+                        for(int i=0;i<jArray.length();i++){
+                            JSONObject jsonObject1=jArray.getJSONObject(i);
+                            idmobil=jsonObject1.getString("idmobil");
+                            kodeMobil =jsonObject1.getString("kodeMobil");
+                            merekMobil= jsonObject1.getString("merekMobil");
+                            //id partner dari alamat
+                            alamat= jsonObject1.getString("alamat");
+                            harga=jsonObject1.getString("harga");
+                            ModelUtama model = new ModelUtama();
+                            model.setIdOrderan(idmobil);
+                            model.setKodemobil(kodeMobil);
+                            model.setNamamobil(merekMobil);
+                            model.setAlamat(alamat);
+                            model.setBiaya(harga);
+                            model.setTujuan("mobil");
+                            modelList.add(model);
+                        }
+                        if(pDialog.isShowing()){
+                            pDialog.dismiss();
+                        }
+                        dbList = modelList;
+                        order_list =  view.findViewById(R.id.rc_mobil);
+                        adapter = new MobilAdapter(getContext(), dbList);
+                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(),2);
+                        order_list.setLayoutManager(mLayoutManager);
+                        //konjugasi_list.setItemAnimator(new DefaultItemAnimator());
+                        //DividerItemDecoration decoration = new DividerItemDecoration(getApplicationContext(), VERTICAL);
+                        //konjugasi_list.addItemDecoration(decoration);
+                        order_list.setAdapter(adapter);
+                        Log.e(MainActivity.class.getSimpleName(), "Auth Response: " +modelList+urll+ response);
+                    }else{
+                        if(pDialog.isShowing()) {
+                            pDialog.dismiss();
+                        }
+                    }
+                }catch (JSONException e){e.printStackTrace(); }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                if(pDialog.isShowing()){
+                    pDialog.dismiss();
+                }
+                Toast.makeText(getActivity(), "Silahkan coba lagi", Toast.LENGTH_LONG).show();
+                getActivity().finish();
+            }
+        });
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
     }
 }

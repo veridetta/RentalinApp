@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
@@ -71,6 +72,7 @@ public class MobilAdapter extends RecyclerView.Adapter<MobilAdapter.MyViewHolder
                     Intent intent = new Intent(v.getContext(), OrderActivity.class);
                     intent.putExtra("jenis","update");
                     intent.putExtra("id",student.getIdOrderan());
+                    intent.putExtra("alamat",student.getAlamat());
                     intent.putExtra("merekMobil",student.getNamamobil());
                     intent.putExtra("harga",student.getBiaya());
                     v.getContext().startActivity(intent);

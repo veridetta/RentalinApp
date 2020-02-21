@@ -45,4 +45,6 @@ dependencies {
     //circle image
     implementation 'de.hdodenhof:circleimageview:2.1.0'
     implementation 'com.github.Shashank02051997:FancyGifDialog-Android:1.2'
+
+    implementation 'joda-time:joda-time:2.10.5'
 }

@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
         //-------------------------------------
         //-------Cek session login jika TRUE
         // maka langsung buka MainActivity --------------------
-        sharedpreferences = getSharedPreferences("rentalinPartner", Context.MODE_PRIVATE);
+        sharedpreferences = getSharedPreferences("rentalinApp", Context.MODE_PRIVATE);
         session = sharedpreferences.getBoolean("session_status", false);
         string_id = sharedpreferences.getString("id", null);
         string_email = sharedpreferences.getString("email", null);

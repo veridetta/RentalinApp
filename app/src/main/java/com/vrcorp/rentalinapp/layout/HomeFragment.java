@@ -2,11 +2,14 @@ package com.vrcorp.rentalinapp.layout;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,6 +30,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.vrcorp.rentalinapp.MainActivity;
+import com.vrcorp.rentalinapp.OrderActivity;
 import com.vrcorp.rentalinapp.R;
 import com.vrcorp.rentalinapp.RegisterActivity;
 import com.vrcorp.rentalinapp.adapter.MobilAdapter;
@@ -50,7 +54,7 @@ public class HomeFragment extends Fragment {
     List<ModelUtama> dbList;
     List<ModelUtama> modelList ;
     private MobilAdapter adapter;
-    LinearLayout data, noData;
+    LinearLayout data, noData, ic_rental, orderan, profile;
     RecyclerView order_list;
     View view;
     public HomeFragment() {
@@ -77,14 +81,50 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_mobil, container, false);
+        view = inflater.inflate(R.layout.fragment_home, container, false);
+        ic_rental = view.findViewById(R.id.ic_rental);
+        orderan = view.findViewById(R.id.orderan);
+        profile= view.findViewById(R.id.profile);
+        orderan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new OrderanFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame_layout, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
+        ic_rental.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new MobilFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame_layout, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new AkunFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame_layout, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
         sharedpreferences = getActivity().getSharedPreferences("rentalinApp", Context.MODE_PRIVATE);
         string_id = sharedpreferences.getString("id", null);
         getMobil(string_id);
         return view;
     }
     private void getMobil(final String xid){
-        final String urll = Url.URL + "getmobil.php?id="+xid;
+        final String urll = Url.URL + "getmobil.php?id="+xid+"&&limit=10";
         RequestQueue requestQueue= Volley.newRequestQueue(getContext());
         modelList= new ArrayList<ModelUtama>();
         pDialog = new ProgressDialog(getActivity());
@@ -105,6 +145,7 @@ public class HomeFragment extends Fragment {
                             idmobil=jsonObject1.getString("idmobil");
                             kodeMobil =jsonObject1.getString("kodeMobil");
                             merekMobil= jsonObject1.getString("merekMobil");
+                            //id partner dari alamat
                             alamat= jsonObject1.getString("alamat");
                             harga=jsonObject1.getString("harga");
                             ModelUtama model = new ModelUtama();
@@ -122,7 +163,7 @@ public class HomeFragment extends Fragment {
                         dbList = modelList;
                         order_list =  view.findViewById(R.id.rc_mobil);
                         adapter = new MobilAdapter(getContext(), dbList);
-                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(),1);
+                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(),2);
                         order_list.setLayoutManager(mLayoutManager);
                         //konjugasi_list.setItemAnimator(new DefaultItemAnimator());
                         //DividerItemDecoration decoration = new DividerItemDecoration(getApplicationContext(), VERTICAL);

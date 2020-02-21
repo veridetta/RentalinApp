@@ -2,77 +2,57 @@
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_marginTop="@dimen/_8sdp"
-    android:layout_marginBottom="@dimen/_8sdp"
-    android:id="@+id/card_menu">
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="@dimen/_2sdp"
-        app:cardMaxElevation="@dimen/_4sdp"
-        app:cardElevation="@dimen/_2sdp"
-        app:cardBackgroundColor="@color/white"
-        android:background="@color/white">
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/_89sdp"
-            android:padding="@dimen/_6sdp">
-            <ImageView
-                android:layout_width="@dimen/_15sdp"
-                android:layout_height="@dimen/_15sdp"
-                android:background="@drawable/dot_blue"/>
-            <LinearLayout
-                android:id="@+id/jumlah_mobil"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:foregroundGravity="center"
-                android:orientation="vertical">
-                <ImageView
-                    android:layout_width="@dimen/_38sdp"
-                    android:layout_height="@dimen/_38sdp"
-                    android:background="@drawable/carpolos"/>/>
-                <TextView
-                    android:id="@+id/nama_mobil"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="Pajero Sport"
-                    android:textStyle="bold"
-                    android:textColor="@color/grey_700"
-                    android:textSize="@dimen/_12sdp"/>
-            </LinearLayout>
-        </RelativeLayout>
-    </androidx.cardview.widget.CardView>
-    <view
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_6sdp"
-        android:background="@color/grey_200"/>
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="@dimen/_2sdp"
-        app:cardMaxElevation="@dimen/_4sdp"
-        app:cardElevation="@dimen/_2sdp"
-        app:cardBackgroundColor="@color/white"
-        android:background="@color/white">
-        <LinearLayout
+    android:layout_marginBottom="@dimen/_8sdp">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="@dimen/_8sdp"
-            android:gravity="center">
-            <TextView
-                android:id="@+id/hargamobil"
+            app:cardCornerRadius="@dimen/_2sdp"
+            app:cardMaxElevation="@dimen/_4sdp"
+            app:cardElevation="@dimen/_2sdp"
+            app:cardBackgroundColor="@color/white"
+            android:background="@color/white">
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Rp700.000"
-                android:textColor="@color/red_400"
-                android:textSize="@dimen/_20sdp"
-                android:textStyle="bold"/>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+                android:layout_height="@dimen/_89sdp"
+                android:padding="@dimen/_6sdp">
+                <ImageView
+                    android:layout_width="@dimen/_15sdp"
+                    android:layout_height="@dimen/_15sdp"
+                    android:background="@drawable/dot_blue"/>
+                <LinearLayout
+                    android:id="@+id/jumlah_mobil"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:foregroundGravity="center"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="@dimen/_38sdp"
+                        android:layout_height="@dimen/_38sdp"
+                        android:background="@drawable/carpolos"/>/>
+                    <TextView
+                        android:id="@+id/nama_mobil"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="Pajero Sport"
+                        android:textStyle="bold"
+                        android:textColor="@color/grey_700"
+                        android:textSize="@dimen/_12sdp"/>
+                    <TextView
+                        android:id="@+id/hargamobil"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rp700.000"
+                        android:textColor="@color/red_400"
+                        android:textSize="@dimen/_20sdp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
 </LinearLayout>
