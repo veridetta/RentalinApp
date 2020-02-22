@@ -18,7 +18,7 @@ public class CheckLoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_check_login);
         //SharedPreferences.Editor editor = sharedpreferences.edit();
         //editor.putBoolean("session_status", true);
-        sharedpreferences = getSharedPreferences("rentalin", Context.MODE_PRIVATE);
+        sharedpreferences = getSharedPreferences("rentalinApp", Context.MODE_PRIVATE);
         session = sharedpreferences.getBoolean("session_status", false);
         if(session){
 
